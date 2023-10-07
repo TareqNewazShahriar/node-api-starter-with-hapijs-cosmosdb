@@ -1,5 +1,12 @@
-# node-starter-template
-Node project starter template.
+# node-api-starter-with-hapijs-cosmosdb
+Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint and hot-reload package.
+
+## Packages Used
+* Hapi.js: web framework
+* Azure Cosmos DB
+* Typescript
+* Eslist: to check code standard.
+* nodemon: to hot reload code changes at development time.
 
 ## Eslint configuration steps
 * **How would you like to use Eslint?**  
