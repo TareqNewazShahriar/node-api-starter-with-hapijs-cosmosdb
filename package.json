@@ -1,0 +1,40 @@
+{
+  "name": "node-api-starter-with-hapijs-cosmosdb",
+  "version": "1.0.0",
+  "description": "Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint and hot-reload package.",
+  "main": "main",
+  "type": "module",
+  "scripts": {
+     "dev": "nodemon main",
+     "lint": "eslint .",
+     "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+     "@hapi/hapi": "^21.3.2"
+  },
+  "devDependencies": {
+     "@typescript-eslint/eslint-plugin": "^5.33.0",
+     "@typescript-eslint/parser": "^5.33.0",
+     "eslint": "^8.21.0",
+     "nodemon": "^2.0.19",
+     "typescript": "^4.7.4"
+  },
+  "repository": {
+     "type": "git",
+     "url": "git+https://github.com/TareqNewazShahriar/node-api-starter-with-hapijs-cosmosdb.git"
+  },
+  "keywords": [
+     "node",
+     "hapi",
+     "azure-cosmos-db",
+     "typescript",
+     "tempalte",
+     "eslint"
+  ],
+  "author": "github/TareqNewazShahriar",
+  "license": "MIT",
+  "bugs": {
+     "url": "https://github.com/TareqNewazShahriar/node-api-starter-with-hapijs-cosmosdb.git/issues"
+  },
+  "homepage": "https://github.com/TareqNewazShahriar/node-api-starter-with-hapijs-cosmosdb.git"
+}
