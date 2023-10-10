@@ -1,17 +1,17 @@
 /// This service communicates with Cosmos DB and does all data manupulation work.
 
 // @ts-check
-import { Container, CosmosClient, Database } from '@azure/cosmos'
+import { CosmosClient } from '@azure/cosmos'
 import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
-
 
 // For simplicity we'll set a constant partition key
 const partitionKey = undefined
 
 const ContainerNames = {
-   labels: 'labels',
-   points: 'points',
-   comments: 'comments'
+   // labels: 'labels',
+   // points: 'points',
+   // comments: 'comments'
+   items: 'items'
 }
 
 class CosmosdbService {
@@ -116,4 +116,4 @@ class CosmosdbService {
    }
 }
 
-export { CosmosdbService as dbService, ContainerNames }
+export { CosmosdbService, ContainerNames }

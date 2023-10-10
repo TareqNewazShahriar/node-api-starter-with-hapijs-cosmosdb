@@ -5,15 +5,18 @@
   "main": "./src/main",
   "type": "module",
   "scripts": {
-    "dev": "nodemon main",
+    "dev": "nodemon build/src/main.js",
+    "build": "tsc -p tsconfig.json --resolveJsonModule --module esnext",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@azure/cosmos": "^4.0.0",
-    "@hapi/hapi": "^21.3.2"
+    "@hapi/hapi": "^21.3.2",
+    "joi": "^17.11.0"
   },
   "devDependencies": {
+    "@types/node": "^20.8.4",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "eslint": "^8.51.0",

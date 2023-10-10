@@ -33,6 +33,7 @@
          "error",
          "never"
       ],
-      "no-var": "error"
+      "no-var": "error",
+      "no-debugger": "off"
    }
 }
