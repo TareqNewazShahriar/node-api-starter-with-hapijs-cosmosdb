@@ -1,3 +1,5 @@
+/// This service communicates with Cosmos DB and does all data manupulation work.
+
 // @ts-check
 import { Container, CosmosClient, Database } from '@azure/cosmos'
 import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
@@ -6,15 +8,14 @@ import appConfig from './appConfig.json' assert {type: 'json'} // if broken on f
 // For simplicity we'll set a constant partition key
 const partitionKey = undefined
 
-const containerNames = {
+const ContainerNames = {
    labels: 'labels',
    points: 'points',
    comments: 'comments'
 }
 
-class DatabaseService {
-   client: CosmosClient
-   database: Database
+class CosmosdbService {
+
    containers: object
 
    /**
@@ -23,22 +24,21 @@ class DatabaseService {
     * @param {string} containerId
     */
    init() {
-      this.client = new CosmosClient({
+      const cosmosClient = new CosmosClient({
          endpoint: appConfig.COSMOS_DB.ENDPOINT,
          key: appConfig.COSMOS_DB.AUTH_KEY
       })
       const databaseId = appConfig.COSMOS_DB.DATABASE_ID
 
       return new Promise((resolve, reject) => {
-         this.client.databases.createIfNotExists({ id: databaseId })
+         cosmosClient.databases.createIfNotExists({ id: databaseId })
             .then(response => {
-
-               this.database = response.database
-
+               const cosmosDb = response.database
                this.containers = {}
-               const promises: Promise<any>[] = []
-               for (const name in containerNames) {
-                  const promise = this.database.containers.createIfNotExists({ id: name })
+               const promises: Promise<unknown>[] = []
+
+               for (const name in ContainerNames) {
+                  const promise = cosmosDb.containers.createIfNotExists({ id: name })
                      .then(response => {
                         this.containers[name] = response.container
                      })
@@ -116,4 +116,4 @@ class DatabaseService {
    }
 }
 
-export { DatabaseService, containerNames }
+export { CosmosdbService as dbService, ContainerNames }

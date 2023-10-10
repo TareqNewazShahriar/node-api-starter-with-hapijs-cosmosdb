@@ -1,5 +1,7 @@
 import Hapi from '@hapi/hapi'
-import routes from './routes.js'
+import routes from './apiController'
+import { dbService, ContainerNames } from './cosmosdbService'
+import apiController from './apiController'
 
 const init = async () => {
    const server = Hapi.server({
@@ -7,7 +9,9 @@ const init = async () => {
       host: 'localhost'
    })
 
-   for(const route in routes)
+   await dbService.init()
+   const controller = new apiController()
+   for(const route in controller.routes)
       server.route(route)
 
    await server.start()
