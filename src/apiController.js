@@ -1,13 +1,12 @@
-import { ReqRefDefaults, ServerRoute } from '@hapi/hapi'
-import { CosmosdbService, ContainerNames } from './cosmosdbService.js'
+import { ContainerNames } from './cosmosdbService.js'
 
 
 class apiController {
 
-   _dbService:CosmosdbService
-   routes:ServerRoute<ReqRefDefaults>[]
+   _dbService = null
+   routes = []
 
-   constructor(dbService:CosmosdbService) {
+   constructor(dbService) {
       this._dbService = dbService
 
       this.routes = [
@@ -21,12 +20,12 @@ class apiController {
          {
             method: 'GET',
             path: '/api/v1/todos/get/{id}',
-            handler: (req, res) => {
+            handler: async (req, res) => {
                console.log('-------')
+               
                this._dbService.getItem(ContainerNames.items, req.params.id)
                   .then(r => {
-                     debugger
-                     res.response(r)
+                     res.response(r).code(200)
                   })
                   .catch(error => console.log(error))
             }

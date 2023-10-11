@@ -16,13 +16,8 @@ const ContainerNames = {
 
 class CosmosdbService {
 
-   containers: object
+   containers = {}
 
-   /**
-    * Manages reading, adding, and updating Tasks in Azure Cosmos DB
-    * @param {string} databaseId
-    * @param {string} containerId
-    */
    init() {
       const cosmosClient = new CosmosClient({
          endpoint: appConfig.COSMOS_DB.ENDPOINT,
@@ -35,7 +30,7 @@ class CosmosdbService {
             .then(response => {
                const cosmosDb = response.database
                this.containers = {}
-               const promises: Promise<unknown>[] = []
+               const promises = []
 
                for (const name in ContainerNames) {
                   const promise = cosmosDb.containers.createIfNotExists({ id: name })
@@ -47,15 +42,23 @@ class CosmosdbService {
                }
                Promise.all(promises)
                   .then(() => resolve(null))
-                  .catch(error => reject(error))
             })
             .catch(error => reject(error))
       })
    }
 
-   async getItem(containerName, itemId) {
-      const { resource } = await this.containers[containerName].item(itemId, partitionKey).read()
-      return resource
+   getItem(containerName, itemId) {
+      return new Promise((resolve, reject) => {
+         this.containers[containerName].item(itemId, partitionKey)
+            .read()
+            .then(r => {
+               resolve(r.resource)
+            })
+            .catch(error => {
+               return error;
+            })
+
+      })
    }
 
    /**
