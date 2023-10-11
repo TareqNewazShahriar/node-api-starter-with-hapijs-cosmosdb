@@ -5,7 +5,8 @@
   "main": "./src/main",
   "type": "module",
   "scripts": {
-    "dev": "nodemon build/src/main.js",
+    "dev": "nodemon src/main.js",
+    "dev:debug": "nodemon --config nodemon.json --inspect src/main.ts",
     "build": "tsc -p tsconfig.json --resolveJsonModule --module esnext",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -21,7 +22,8 @@
     "@typescript-eslint/parser": "^6.7.4",
     "eslint": "^8.51.0",
     "nodemon": "^3.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "ts-node": "^10.9.1"
   },
   "repository": {
     "type": "git",
