@@ -11,7 +11,7 @@ const ContainerNames = {
    // labels: 'labels',
    // points: 'points',
    // comments: 'comments'
-   items: 'items'
+   items: 'Items'
 }
 
 class CosmosdbService {
@@ -32,7 +32,7 @@ class CosmosdbService {
                this.containers = {}
                const promises = []
 
-               for (const name in ContainerNames) {
+               for (const name of Object.values(ContainerNames)) {
                   const promise = cosmosDb.containers.createIfNotExists({ id: name })
                      .then(response => {
                         this.containers[name] = response.container
@@ -47,15 +47,15 @@ class CosmosdbService {
       })
    }
 
-   getItem(containerName, itemId) {
+   get(containerName, id) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(itemId, partitionKey)
+         this.containers[containerName].item(id, partitionKey)
             .read()
             .then(r => {
                resolve(r.resource)
             })
             .catch(error => {
-               return error;
+               reject(error)
             })
 
       })
@@ -66,7 +66,7 @@ class CosmosdbService {
     * @param {string} containerName
     * @param {array|object} parameters: in the format [{ name: '@name_of_column', value: x }]. If only on parameter, then just pass the object without array.
     */
-   find(containerName, parameters) {
+   query(containerName, parameters) {
       const querySpec = {
          query: `SELECT * FROM ${containerName}`,
          parameters: parameters instanceof Array ? parameters : [parameters]
@@ -84,31 +84,23 @@ class CosmosdbService {
       })
    }
 
-   async addItem(containerName, item) {
-      item.date = Date.now()
-      item.completed = false
-
+   create(containerName, item) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].items.create(item, { preTriggerInclude: ['addToDoItemTimestamp'] })
+         this.containers[containerName].items.create(item /*, { preTriggerInclude: ['addToDoItemTimestamp'] }*/)
             .then(r => {
-               console.log('Created.', r)
                resolve(r.resource)
             })
             .catch(err => {
-               console.log('Error on create.', err)
                reject(err)
             })
       })
    }
 
-   async updateItem(containerName, itemId) {
-      const doc = await this.getItem(containerName, itemId)
-      doc.completed = true
-
+   update(containerName, id, item) {
       return new Promise((resolve, reject) => {
          this.containers[containerName]
-            .item(itemId, partitionKey)
-            .replace(doc)
+            .item(id, partitionKey)
+            .replace(item)
             .then(r => {
                resolve(r.resource)
             })
