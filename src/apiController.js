@@ -19,21 +19,21 @@ class apiController {
          },
          {
             method: 'POST',
-            path: '/api/v1/todo/create',
+            path: '/api/todo/create',
             handler: (req, res) => {
                const requestData = req.payload
                return this._dbService.create(ContainerNames.items, requestData)
                   .then(r =>
-                     res.response(r).code(201)
+                     res.response(r).code(r.statusCode)
                   )
-                  .catch(error => 
-                     res.response(error).code(500)
+                  .catch(e => 
+                     res.response(e).code(e.statusCode)
                   )
             }
          },
          {
             method: 'PUT',
-            path: '/api/v1/todo/{id}',
+            path: '/api/todo/{id}',
             handler: (req, res) => {
                // todo: validation with joi
                const requestData = req.payload
@@ -41,49 +41,48 @@ class apiController {
                   .then(() =>
                      res.response().code(204)
                   )
-                  .catch(error => 
-                     res.response(error).code(500)
+                  .catch(e => 
+                     res.response(e).code(e.statusCode)
                   )
             }
          },
          {
             method: 'DELETE',
-            path: '/api/v1/todo/{id}',
+            path: '/api/todo/{id}',
             handler: (req, res) => {
                // todo: validation with joi
-
                return this._dbService.delete(ContainerNames.items, req.params.id)
                   .then(() =>
                      res.response().code(204)
                   )
-                  .catch(apiResponse => 
-                     res.response(apiResponse).code(apiResponse.statusCode)
+                  .catch(e => 
+                     res.response(e).code(e.statusCode)
                   )
             }
          },
          {
             method: 'GET',
-            path: '/api/v1/todo/get/{id}',
+            path: '/api/todo/get/{id}',
             handler: (req, res) => {
                return this._dbService.get(ContainerNames.items, req.params.id)
                   .then(r =>
-                     res.response(r)
+                     res.response(r).code(r.statusCode)
                   )
-                  .catch(error =>
-                     res.response(error).code(500)
+                  .catch(e =>
+                     res.response(e).code(e.statusCode)
                   )
             }
          },
          {
             method: 'GET',
-            path: '/api/v1/todo/getall/pending',
+            path: '/api/todo/getall/pending',
             handler: (req, res) => {
                return this._dbService.query(ContainerNames.items, { name: '@completed', value: false })
                   .then(r => {
-                     return r
+                     return res.response(r).code(r.statusCode)
                   })
-                  .catch(error => {
-                     return error
+                  .catch(e => {
+                     return res.response(e).code(e.statusCode)
                   })
             }
          }

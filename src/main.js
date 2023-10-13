@@ -8,9 +8,9 @@ const init = async () => {
       host: 'localhost'
    })
 
-   const dbService = new CosmosdbService()
-   await dbService.init()
-   const controller = new apiController(dbService)
+   const cosmosdbService = new CosmosdbService()
+   await cosmosdbService.init()
+   const controller = new apiController(cosmosdbService)
    for(let i = 0; i < controller.routes.length; i++)
       server.route(controller.routes[i])
 
