@@ -17,22 +17,10 @@
    ],
    "rules": {
       "@typescript-eslint/no-var-requires": "off",
-      "indent": [
-         "error",
-         3
-      ],
-      "linebreak-style": [
-         "error",
-         "windows"
-      ],
-      "quotes": [
-         "error",
-         "single"
-      ],
-      "semi": [
-         "error",
-         "never"
-      ],
+      "indent": ["error", 3],
+      "linebreak-style": ["error", "windows"],
+      "quotes": ["error", "single"],
+      "semi": ["error", "never"],
       "no-var": "error",
       "no-debugger": "off"
    }
