@@ -33,7 +33,7 @@ class apiController {
          },
          {
             method: 'PUT',
-            path: '/api/v1/todo/update/{id}',
+            path: '/api/v1/todo/{id}',
             handler: (req, res) => {
                // todo: validation with joi
                const requestData = req.payload
@@ -56,8 +56,8 @@ class apiController {
                   .then(() =>
                      res.response().code(204)
                   )
-                  .catch(error => 
-                     res.response({message: error.message}).code(500)
+                  .catch(apiResponse => 
+                     res.response(apiResponse).code(apiResponse.statusCode)
                   )
             }
          },

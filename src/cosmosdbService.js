@@ -1,7 +1,9 @@
 /// This service communicates with Cosmos DB and does all data manupulation work.
 
 import { CosmosClient } from '@azure/cosmos'
-import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
+import {ApiResponse, createErrorResponse, ERROR_TYPES} from './models.js'
+import fs from 'fs'
+//import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
 
 // For simplicity we'll set a constant partition key
 const partitionKey = undefined
@@ -18,6 +20,9 @@ class CosmosdbService {
    containers = {}
 
    init() {
+      const appConfigText = fs.readFileSync('./src/appConfig.json', {encoding: 'utf-8'})
+      const appConfig = JSON.parse(appConfigText) 
+
       const cosmosClient = new CosmosClient({
          endpoint: appConfig.COSMOS_DB.ENDPOINT,
          key: appConfig.COSMOS_DB.AUTH_KEY
@@ -87,7 +92,11 @@ class CosmosdbService {
                resolve(r.resource)
             })
             .catch((error) => {
-               reject(error)
+               reject(createErrorResponse(error.code,
+                  `Error on deleting data. (ID: ${id})`,
+                  undefined,
+                  ERROR_TYPES.Database, 
+                  error))
             })
       })
    }
