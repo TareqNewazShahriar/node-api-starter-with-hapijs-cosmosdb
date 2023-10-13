@@ -19,7 +19,7 @@ class apiController {
          },
          {
             method: 'POST',
-            path: '/api/v1/todo/create',
+            path: '/api/todo/create',
             handler: (req, res) => {
                const requestData = req.payload
                return this._dbService.create(ContainerNames.items, requestData)
@@ -33,7 +33,7 @@ class apiController {
          },
          {
             method: 'PUT',
-            path: '/api/v1/todo/{id}',
+            path: '/api/todo/{id}',
             handler: (req, res) => {
                // todo: validation with joi
                const requestData = req.payload
@@ -48,7 +48,7 @@ class apiController {
          },
          {
             method: 'DELETE',
-            path: '/api/v1/todo/{id}',
+            path: '/api/todo/{id}',
             handler: (req, res) => {
                // todo: validation with joi
                return this._dbService.delete(ContainerNames.items, req.params.id)
@@ -62,7 +62,7 @@ class apiController {
          },
          {
             method: 'GET',
-            path: '/api/v1/todo/get/{id}',
+            path: '/api/todo/get/{id}',
             handler: (req, res) => {
                return this._dbService.get(ContainerNames.items, req.params.id)
                   .then(r =>
@@ -75,14 +75,14 @@ class apiController {
          },
          {
             method: 'GET',
-            path: '/api/v1/todo/getall/pending',
+            path: '/api/todo/getall/pending',
             handler: (req, res) => {
                return this._dbService.query(ContainerNames.items, { name: '@completed', value: false })
                   .then(r => {
-                     res.response(r).code(r.statusCode)
+                     return res.response(r).code(r.statusCode)
                   })
                   .catch(e => {
-                     res.response(e).code(e.statusCode)
+                     return res.response(e).code(e.statusCode)
                   })
             }
          }
