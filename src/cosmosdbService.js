@@ -1,6 +1,5 @@
 /// This service communicates with Cosmos DB and does all data manupulation work.
 
-// @ts-check
 import { CosmosClient } from '@azure/cosmos'
 import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
 
@@ -47,17 +46,66 @@ class CosmosdbService {
       })
    }
 
+   /**
+    * @param {string} containerName
+    * @param {any} item
+    */
+   create(containerName, item) {
+      return new Promise((resolve, reject) => {
+         this.containers[containerName].items.create(item /*, { preTriggerInclude: ['addToDoItemTimestamp'] }*/)
+            .then((r) => {
+               resolve(r.resource)
+            })
+            .catch((err) => {
+               reject(err)
+            })
+      })
+   }
+
+   /**
+    * @param {string} containerName
+    * @param {any} id
+    * @param {any} item
+    */
+   update(containerName, id, item) {
+      return new Promise((resolve, reject) => {
+         this.containers[containerName].item(id, partitionKey).replace(item)
+            .then((r) => {
+               resolve(r.resource)
+            })
+            .catch((err) => {
+               reject(err)
+            })
+      })
+   }
+
+   delete(containerName, id) {
+      return new Promise((resolve, reject) => {
+         this.containers[containerName].item(id)
+            .delete()
+            .then((r) => {
+               resolve(r.resource)
+            })
+            .catch((error) => {
+               reject(error)
+            })
+      })
+   }
+
+   /**
+    * @param {string} containerName
+    * @param {any} id
+    */
    get(containerName, id) {
       return new Promise((resolve, reject) => {
          this.containers[containerName].item(id, partitionKey)
             .read()
-            .then(r => {
+            .then((r) => {
                resolve(r.resource)
             })
-            .catch(error => {
+            .catch((error) => {
                reject(error)
             })
-
       })
    }
 
@@ -75,37 +123,11 @@ class CosmosdbService {
       return new Promise((resolve, reject) => {
          this.containers[containerName].items.query(querySpec)
             .fetchAll()
-            .then(response => {
+            .then((response) => {
                resolve(response.resources)
             })
-            .catch(error => {
+            .catch((error) => {
                reject(error)
-            })
-      })
-   }
-
-   create(containerName, item) {
-      return new Promise((resolve, reject) => {
-         this.containers[containerName].items.create(item /*, { preTriggerInclude: ['addToDoItemTimestamp'] }*/)
-            .then(r => {
-               resolve(r.resource)
-            })
-            .catch(err => {
-               reject(err)
-            })
-      })
-   }
-
-   update(containerName, id, item) {
-      return new Promise((resolve, reject) => {
-         this.containers[containerName]
-            .item(id, partitionKey)
-            .replace(item)
-            .then(r => {
-               resolve(r.resource)
-            })
-            .catch(err => {
-               reject(err)
             })
       })
    }
