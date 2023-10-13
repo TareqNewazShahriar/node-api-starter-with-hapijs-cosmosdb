@@ -2,6 +2,6 @@
    "COSMOS_DB": {
       "ENDPOINT": "",
       "AUTH_KEY": "",
-      "DATABASE_ID": "note-db"
+      "DATABASE_ID": ""
    }
 }

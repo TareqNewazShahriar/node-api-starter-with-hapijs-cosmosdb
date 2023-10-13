@@ -1,7 +1,7 @@
 /// This service communicates with Cosmos DB and does all data manupulation work.
 
 import { CosmosClient } from '@azure/cosmos'
-import {ApiResponse, createErrorResponse, ERROR_TYPES} from './models.js'
+import ApiResponseHelper from './ApiResponseHelper.js'
 import fs from 'fs'
 //import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
 
@@ -20,7 +20,7 @@ class CosmosdbService {
    containers = {}
 
    init() {
-      const appConfigText = fs.readFileSync('./src/appConfig.json', {encoding: 'utf-8'})
+      const appConfigText = fs.readFileSync('./appConfig.json', {encoding: 'utf-8'})
       const appConfig = JSON.parse(appConfigText) 
 
       const cosmosClient = new CosmosClient({
@@ -59,10 +59,14 @@ class CosmosdbService {
       return new Promise((resolve, reject) => {
          this.containers[containerName].items.create(item /*, { preTriggerInclude: ['addToDoItemTimestamp'] }*/)
             .then((r) => {
-               resolve(r.resource)
+               resolve(ApiResponseHelper.create(r.statusCode, r.resource))
             })
-            .catch((err) => {
-               reject(err)
+            .catch((error) => {
+               reject(ApiResponseHelper.createError(error.code, 
+                  'Error occurred on adding new data on database.', 
+                  null, 
+                  ApiResponseHelper.ERROR_TYPES.Database, 
+                  error))
             })
       })
    }
@@ -76,10 +80,14 @@ class CosmosdbService {
       return new Promise((resolve, reject) => {
          this.containers[containerName].item(id, partitionKey).replace(item)
             .then((r) => {
-               resolve(r.resource)
+               resolve(ApiResponseHelper.create(r.code, r.resource))
             })
-            .catch((err) => {
-               reject(err)
+            .catch((error) => {
+               reject(ApiResponseHelper.createError(error.code, 
+                  'Error occurred while updating data on database.',
+                  null,
+                  ApiResponseHelper.ERROR_TYPES.Database,
+                  error))
             })
       })
    }
@@ -89,13 +97,13 @@ class CosmosdbService {
          this.containers[containerName].item(id)
             .delete()
             .then((r) => {
-               resolve(r.resource)
+               resolve(ApiResponseHelper.create(r.statusCode, r.resource))
             })
             .catch((error) => {
-               reject(createErrorResponse(error.code,
-                  `Error on deleting data. (ID: ${id})`,
-                  undefined,
-                  ERROR_TYPES.Database, 
+               reject(ApiResponseHelper.createError(error.code,
+                  'Error on deleting data.',
+                  null,
+                  ApiResponseHelper.ERROR_TYPES.Database,
                   error))
             })
       })
@@ -110,10 +118,14 @@ class CosmosdbService {
          this.containers[containerName].item(id, partitionKey)
             .read()
             .then((r) => {
-               resolve(r.resource)
+               resolve(ApiResponseHelper.create(r.statusCode, r.resource))
             })
             .catch((error) => {
-               reject(error)
+               reject(ApiResponseHelper.createError(error.code,
+                  'Error on getting data.',
+                  null,
+                  ApiResponseHelper.ERROR_TYPES.Database,
+                  error))
             })
       })
    }
@@ -132,11 +144,15 @@ class CosmosdbService {
       return new Promise((resolve, reject) => {
          this.containers[containerName].items.query(querySpec)
             .fetchAll()
-            .then((response) => {
-               resolve(response.resources)
+            .then((r) => {
+               resolve(ApiResponseHelper.create(200, r.resources))
             })
             .catch((error) => {
-               reject(error)
+               reject(ApiResponseHelper.createError(error.code,
+                  'Error occurred while searching on data.',
+                  null,
+                  ApiResponseHelper.ERROR_TYPES.Database,
+                  error))
             })
       })
    }
