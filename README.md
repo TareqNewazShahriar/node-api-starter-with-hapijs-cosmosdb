@@ -45,6 +45,11 @@ Note about getting rid of semicolon (;): Javascript has this ability. Without an
   But when added in `npm script`, full path is not needed.  
   N.b. if full path command is not working, check your command line application, try using simple command line/shell application.
 
+### How to debug typescrip in VS Code
+* https://www.youtube.com/watch?v=4zdBk6wisxc
+* https://www.youtube.com/watch?v=f3i9b3uK00U
+
+
 
 ## Frequently shooted troubles (troubleshooting)
 ### Trouble: eslint error *Require statement not part of import statement.*
