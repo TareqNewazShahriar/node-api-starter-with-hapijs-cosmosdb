@@ -2,7 +2,10 @@
 
 // @ts-check
 import { CosmosClient } from '@azure/cosmos'
-import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
+import fs from 'fs'
+
+const appConfigText = fs.readFileSync('./src/appConfig.json', {encoding: 'utf-8'})
+const appConfig = JSON.parse(appConfigText)
 
 // For simplicity we'll set a constant partition key
 const partitionKey = undefined
