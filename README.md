@@ -34,16 +34,28 @@ Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint 
 * **Which package manager do you want to use?**  
   *npm*
 
-Note about getting rid of semicolon (;): Javascript has this ability. Without an extra syntax, code will be cleaner (think about the cleanness of Python code). Only use it, where it is necessary; unless we can start to omit it from now.
+
+
+## Azure Cosmos DB Concepts
+* Creation Hierarchy: create db-account > then create db > then create containers.
+* Containers are the name of collection of documents, like tables.
+* When there's more than one container, a partiion key must be assigned. Which will then be used to distribute data across multiple partiions (servers?). A Partition key is a field name of that container/document, like id, country, city etc. Partition key can be nested, like "/country/city"; based on this nesting, data partitioning will happen, when needed.
+* When creating database, you can fix dedicated RU for each container. Like if your database has 2000 RU/s purchased, you can distribute that RU to all the containers so that a minimum RU will be allocated for those container, for smooth read/write. So that a high read/write in container will not affect another container. In that case, a container must be assigned minimum of 400 RU/s.  
+  Also you can create database without fixing RU for containers, and total RU will be shared accross all containers.
+
 
 
 ## Notes
+### Note about getting rid of semicolon (;)
+Javascript has this ability. Without an extra syntax, code will be cleaner (think about the cleanness of Python code). Let's use it and see how does it feel.
+
 ### To run a npm package command directly from command. For example
   ```
   node_modules\\.bin\\eslint .
   ```
   But when added in `npm script`, full path is not needed.  
   N.b. if full path command is not working, check your command line application, try using simple command line/shell application.
+
 
 
 ## Frequently shooted troubles (troubleshooting)

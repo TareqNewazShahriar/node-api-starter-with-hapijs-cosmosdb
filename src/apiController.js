@@ -1,5 +1,4 @@
-import { ContainerNames } from './cosmosdbService.js'
-
+import { Containers } from './cosmosdbService.js'
 
 class apiController {
 
@@ -19,10 +18,10 @@ class apiController {
          },
          {
             method: 'POST',
-            path: '/api/todo/create',
+            path: '/api/book/create',
             handler: (req, res) => {
                const requestData = req.payload
-               return this._dbService.create(ContainerNames.items, requestData)
+               return this._dbService.create(Containers.books, requestData)
                   .then(r =>
                      res.response(r).code(r.statusCode)
                   )
@@ -33,11 +32,11 @@ class apiController {
          },
          {
             method: 'PUT',
-            path: '/api/todo/{id}',
+            path: '/api/book/{id}',
             handler: (req, res) => {
                // todo: validation with joi
                const requestData = req.payload
-               return this._dbService.update(ContainerNames.items, req.params.id, requestData)
+               return this._dbService.update(Containers.books, req.params.id, requestData)
                   .then(() =>
                      res.response().code(204)
                   )
@@ -48,10 +47,10 @@ class apiController {
          },
          {
             method: 'DELETE',
-            path: '/api/todo/{id}',
+            path: '/api/book/{id}',
             handler: (req, res) => {
                // todo: validation with joi
-               return this._dbService.delete(ContainerNames.items, req.params.id)
+               return this._dbService.delete(Containers.books, req.params.id)
                   .then(() =>
                      res.response().code(204)
                   )
@@ -62,9 +61,9 @@ class apiController {
          },
          {
             method: 'GET',
-            path: '/api/todo/get/{id}',
+            path: '/api/book/get/{id}',
             handler: (req, res) => {
-               return this._dbService.get(ContainerNames.items, req.params.id)
+               return this._dbService.get(Containers.books, req.params.id, req.params.id)
                   .then(r =>
                      res.response(r).code(r.statusCode)
                   )
@@ -75,9 +74,26 @@ class apiController {
          },
          {
             method: 'GET',
-            path: '/api/todo/getall/pending',
+            path: '/api/book/getall',
             handler: (req, res) => {
-               return this._dbService.query(ContainerNames.items, { name: '@completed', value: false })
+               return this._dbService.getAll(Containers.books)
+                  .then(r => {
+                     return res.response(r).code(r.statusCode)
+                  })
+                  .catch(e => {
+                     return res.response(e).code(e.statusCode)
+                  })
+            }
+         },
+         {
+            method: 'GET',
+            path: '/api/book/search',
+            handler: (req, res) => {
+               const titleContains = `%${req.query['title']}%` // Caution: cosmos db string operation are case sensitive.
+
+               return this._dbService.query(Containers.books,
+                  'select * from c where c.name like @word',
+                  [{name: '@word', value: titleContains}])
                   .then(r => {
                      return res.response(r).code(r.statusCode)
                   })

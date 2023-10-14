@@ -1,7 +1,7 @@
 {
   "name": "node-api-starter-with-hapijs-cosmosdb",
   "version": "1.0.0",
-  "description": "Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint and hot-reload package.",
+  "description": "Node project starter template with hapi.js, azure-cosmos-db, eslint and hot-reload package.",
   "main": "./src/main",
   "type": "module",
   "scripts": {
@@ -26,7 +26,6 @@
     "node",
     "hapi",
     "azure-cosmos-db",
-    "typescript",
     "tempalte",
     "eslint"
   ],
