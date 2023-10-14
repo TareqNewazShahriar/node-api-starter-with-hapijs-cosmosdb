@@ -4,36 +4,8 @@ Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint 
 ## Packages Used
 * Hapi.js: web framework
 * Azure Cosmos DB
-* Typescript
 * Eslist: to check code standard.
 * nodemon: to hot reload code changes at development time.
-
-## Eslint configuration steps
-* **How would you like to use Eslint?**  
-  *To check syntax, find problems, and enforce code style.*  
-* **Typpes of modules your project use?**  
-  *CommonJs*  
-* **JS framework?** (React? vue?)  
-  *None*  
-* **Typescript?**  
-  *No*  
-* **Where does your code run?**  
-  *Node*  
-* **Define styles for you project:**  
-  *Answer questions about you style*  
-* **What format do you want your config file to be in?**  
-  *Json*  
-* **What style of indentation do you use?**  
-  *Space*  
-* **What quotes do you use for strings?**  
-  *single*  
-* **What line endings do you use?**  
-  *windows*  
-* **Would you like to install them now?**  
-  *Yes*  
-* **Which package manager do you want to use?**  
-  *npm*
-
 
 
 ## Azure Cosmos DB Concepts
@@ -72,3 +44,31 @@ On code `require('something')`.
 
 ### Trouble: Eslist error: *Failed to load plugin '@typescript-eslint' declared in '.eslintrc.json': Cannot find module 'typescript'*
 **Shoot**: Install typescript globally or as a dev-dependency. Not sure why *typescript* was not included as a dependency in  *typescript-eslint*!
+
+
+
+## Eslint configuration steps
+* **How would you like to use Eslint?**  
+  *To check syntax, find problems, and enforce code style.*  
+* **Typpes of modules your project use?**  
+  *CommonJs*  
+* **JS framework?** (React? vue?)  
+  *None*  
+* **Typescript?**  
+  *No*  
+* **Where does your code run?**  
+  *Node*  
+* **Define styles for you project:**  
+  *Answer questions about you style*  
+* **What format do you want your config file to be in?**  
+  *Json*  
+* **What style of indentation do you use?**  
+  *Space*  
+* **What quotes do you use for strings?**  
+  *single*  
+* **What line endings do you use?**  
+  *windows*  
+* **Would you like to install them now?**  
+  *Yes*  
+* **Which package manager do you want to use?**  
+  *npm*
