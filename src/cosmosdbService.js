@@ -7,11 +7,8 @@ import fs from 'fs'
 
 // For simplicity we'll set a constant partition key
 
-const ContainerNames = {
-   // labels: 'labels',
-   // points: 'points',
-   // comments: 'comments'
-   container1: 'labels'
+const Containers = {
+   books: {name: 'books', partitionKey: 'id'}
 }
 
 class CosmosdbService {
@@ -35,10 +32,10 @@ class CosmosdbService {
                this.containers = {}
                const promises = []
 
-               for (const name of Object.values(ContainerNames)) {
-                  const promise = cosmosDb.containers.createIfNotExists({ id: name })
+               for (const c of Object.values(Containers)) {
+                  const promise = cosmosDb.containers.createIfNotExists({ id: c.name })
                      .then(response => {
-                        this.containers[name] = response.container
+                        this.containers[c.name] = response.container
                      })
                      .catch(error => error)
                   promises.push(promise)
@@ -51,12 +48,12 @@ class CosmosdbService {
    }
 
    /**
-    * @param {string} containerName
+    * @param {string} container object with name and partition key
     * @param {any} item
     */
-   create(containerName, item) {
+   create(container, item) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].items.create(item /*, { preTriggerInclude: ['addToDoItemTimestamp'] }*/)
+         this.containers[container.name].items.create(item)
             .then((r) => {
                resolve(ApiResponseHelper.create(r.statusCode, r.resource))
             })
@@ -71,13 +68,13 @@ class CosmosdbService {
    }
 
    /**
-    * @param {string} containerName
+    * @param {string} container object with name and partition key
     * @param {any} id
     * @param {any} item
     */
-   update(containerName, id, item) {
+   update(container, id, item) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(id).replace(item)
+         this.containers[container.name].item(id).replace(item)
             .then((r) => {
                resolve(ApiResponseHelper.create(r.code, r.resource))
             })
@@ -91,10 +88,9 @@ class CosmosdbService {
       })
    }
 
-   delete(containerName, id) {
+   delete(container, id) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(id)
-            .delete()
+         this.containers[container.name].item(id).delete()
             .then((r) => {
                resolve(ApiResponseHelper.create(r.statusCode, r.resource))
             })
@@ -109,12 +105,12 @@ class CosmosdbService {
    }
 
    /**
-    * @param {string} containerName
+    * @param {string} container object with name and partition key
     * @param {any} id
     */
-   get(containerName, id) {
+   get(container, id, partitionKey) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(id, id)
+         this.containers[container.name].item(id, partitionKey)
             .read()
             .then((r) => {
                resolve(ApiResponseHelper.create(r.statusCode, r.resource))
@@ -131,17 +127,41 @@ class CosmosdbService {
 
    /**
     * Performs SQL query on a container.
-    * @param {string} containerName
+    * @param {string} container object with name and partition key
     * @param {array|object} parameters: in the format [{ name: '@name_of_column', value: x }]. If only on parameter, then just pass the object without array.
     */
-   query(containerName, parameters) {
+   getAll(container) {
+      const querySpec = { query: 'SELECT * FROM c' }
+
+      return new Promise((resolve, reject) => {
+         this.containers[container.name].items.query(querySpec)
+            .fetchAll()
+            .then((r) => {
+               resolve(ApiResponseHelper.create(200, r.resources))
+            })
+            .catch((error) => {
+               reject(ApiResponseHelper.createError(error.code,
+                  'Error occurred while searching on data.',
+                  null,
+                  ApiResponseHelper.ERROR_TYPES.Database,
+                  error))
+            })
+      })
+   }
+
+   /**
+    * Performs SQL query on a container.
+    * @param {string} container object with name and partition key
+    * @param {array|object} parameters: in the format [{ name: '@name_of_column', value: x }]. If only on parameter, then just pass the object without array.
+    */
+   query(container, query, parameters) {
       const querySpec = {
-         query: `SELECT * FROM ${containerName}`,
-         parameters: parameters instanceof Array ? parameters : [parameters]
+         query,
+         parameters: parameters && parameters instanceof Array === false ? [parameters] : parameters
       }
 
       return new Promise((resolve, reject) => {
-         this.containers[containerName].items.query(querySpec)
+         this.containers[container.name].items.query(querySpec)
             .fetchAll()
             .then((r) => {
                resolve(ApiResponseHelper.create(200, r.resources))
@@ -157,4 +177,4 @@ class CosmosdbService {
    }
 }
 
-export { CosmosdbService, ContainerNames }
+export { CosmosdbService, Containers }
