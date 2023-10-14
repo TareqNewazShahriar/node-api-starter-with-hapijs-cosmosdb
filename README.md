@@ -37,6 +37,13 @@ Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint 
 Note about getting rid of semicolon (;): Javascript has this ability. Without an extra syntax, code will be cleaner (think about the cleanness of Python code). Only use it, where it is necessary; unless we can start to omit it from now.
 
 
+## Azure Cosmos DB Concepts
+* Hierarchy: db-account > db > container1, container2, ... containerN
+* Containers are the name of collection of documents, like tables.
+* When there's more than one container, a partiion key must be assigned. Which will then use to distribute data across multiple partiions (servers?). A Partition key is a property name of that container/document, like id, country, city etc. Partition key can be nested, like "/country/city".
+* A container must be assigned minimum of 400 RU/s.
+
+
 ## Notes
 ### To run a npm package command directly from command. For example
   ```
@@ -44,6 +51,7 @@ Note about getting rid of semicolon (;): Javascript has this ability. Without an
   ```
   But when added in `npm script`, full path is not needed.  
   N.b. if full path command is not working, check your command line application, try using simple command line/shell application.
+
 
 
 ## Frequently shooted troubles (troubleshooting)

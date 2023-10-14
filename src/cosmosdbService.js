@@ -6,13 +6,12 @@ import fs from 'fs'
 //import appConfig from './appConfig.json' assert {type: 'json'} // if broken on future version, see the change log.
 
 // For simplicity we'll set a constant partition key
-const partitionKey = undefined
 
 const ContainerNames = {
    // labels: 'labels',
    // points: 'points',
    // comments: 'comments'
-   items: 'Items'
+   items: 'labels'
 }
 
 class CosmosdbService {
@@ -78,7 +77,7 @@ class CosmosdbService {
     */
    update(containerName, id, item) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(id, partitionKey).replace(item)
+         this.containers[containerName].item(id).replace(item)
             .then((r) => {
                resolve(ApiResponseHelper.create(r.code, r.resource))
             })
@@ -115,7 +114,7 @@ class CosmosdbService {
     */
    get(containerName, id) {
       return new Promise((resolve, reject) => {
-         this.containers[containerName].item(id, partitionKey)
+         this.containers[containerName].item(id, id)
             .read()
             .then((r) => {
                resolve(ApiResponseHelper.create(r.statusCode, r.resource))
