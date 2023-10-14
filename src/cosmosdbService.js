@@ -128,25 +128,9 @@ class CosmosdbService {
    /**
     * Performs SQL query on a container.
     * @param {string} container object with name and partition key
-    * @param {array|object} parameters: in the format [{ name: '@name_of_column', value: x }]. If only on parameter, then just pass the object without array.
     */
    getAll(container) {
-      const querySpec = { query: 'SELECT * FROM c' }
-
-      return new Promise((resolve, reject) => {
-         this.containers[container.name].items.query(querySpec)
-            .fetchAll()
-            .then((r) => {
-               resolve(ApiResponseHelper.create(200, r.resources))
-            })
-            .catch((error) => {
-               reject(ApiResponseHelper.createError(error.code,
-                  'Error occurred while searching on data.',
-                  null,
-                  ApiResponseHelper.ERROR_TYPES.Database,
-                  error))
-            })
-      })
+      return this.query(container, 'SELECT * FROM c')
    }
 
    /**
