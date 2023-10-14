@@ -1,4 +1,4 @@
-# node-api-starter-with-hapijs-cosmosdb
+#  node-api-with-hapijs-cosmosdb-getting-started
 Node project starter template with hapi.js, azure-cosmos-db, typescript, eslint and hot-reload package.
 
 ## Packages Used
