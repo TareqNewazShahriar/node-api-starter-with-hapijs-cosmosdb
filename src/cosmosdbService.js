@@ -11,7 +11,7 @@ const ContainerNames = {
    // labels: 'labels',
    // points: 'points',
    // comments: 'comments'
-   items: 'labels'
+   container1: 'labels'
 }
 
 class CosmosdbService {
